@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 
-const  list = [
+const list = [
     {
         title: 'React',
         url: 'https://facebook.github.io/react/',
@@ -12,8 +12,8 @@ const  list = [
     },
     {
         title: 'Redux',
-        url:'https://github.com/reactjs/redux',
-        author:'Dan Abramov, Andrew Clark',
+        url: 'https://github.com/reactjs/redux',
+        author: 'Dan Abramov, Andrew Clark',
         num_comments: 2,
         points: 5,
         pojectID: 1,
@@ -24,9 +24,21 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                { list.map(function(item) {
-                    return <div>{item.title}</div>;
+                {list.map(function (item) {
+                    return (
+                        <div>
+                            <span>
+                                <a href={item.url}>{item.title}</a>
+                            </span>
+                            <span>{item.author}</span>
+                            <span>{item.num_comments}</span>
+                            <span>{item.points}</span>
+                        </div>
+                    );
                 })}
-            </div> );
-    } }
+            </div>
+        );
+    }
+}
+
 export default App;
