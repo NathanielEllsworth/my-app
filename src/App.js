@@ -67,8 +67,8 @@ class App extends Component {
     render() {
         const {searchTerm, list} = this.state;
         return (
-            <div className="App">
-
+            <div className="page">
+                <div className="interactions">
 
                 <Search
                     value={searchTerm}
@@ -76,7 +76,7 @@ class App extends Component {
                 >
                     Search
                 </Search>
-
+                </div>
 
                 <Table
                     list={list}
@@ -84,39 +84,48 @@ class App extends Component {
                     onDismiss={this.onDismiss}
                 />
 
-
-                <form>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={this.onSearchChange}
-                    />
-                </form>
-
-
-                {list.filter(isSearched(searchTerm)).map(item =>
-
-                    <div key={item.objectID}>
-                        <span>
-                            <a href={item.url}>{item.title}</a>
-                        </span>
-                        <span>{item.author}</span>
-                        <span>{item.num_comments}</span>
-                        <span>{item.points}</span>
-                        <span>
-                            <button
-                            onClick={() => this.onDismiss(item.objectID)}
-                            type="button"
-                            >
-                                Dismiss
-                            </button>
-                        </span>
-                    </div>
-                )}
             </div>
         );
     }
 }
+
+/**
+ * refactored Table component to a stateless functional component
+ */
+
+const Table = ({ list, pattern, onDismiss }) =>
+    <div className="table">
+        { list.filter(isSearched(pattern)).map(item =>
+            <div key={item.objectID} className="table-row">
+                <span style={{ width: '40%' }}>
+                    <a href={item.url}>{item.title}</a>
+                </span>
+                <span style ={{ width: '30%' }}>
+                    {item.author}
+                </span>
+                <span style ={{ width: '10%' }}>
+                    {item.num_comments}
+                </span>
+                <span style={{ width: '10%' }}>
+                    {item.points}
+                </span>
+                <span style={{ width: '10%'}}>
+                    <button
+                        onClick={() => onDismiss(item.objectID)}
+                        className="button-inline"
+                    >
+                        Dismiss
+                    </button>
+                </span>
+            </div>
+        )}
+    </div>;
+
+
+
+// remember to replace <button with <Button
+
+
 
 // class Search extends Component {
 //     render() {
@@ -174,28 +183,6 @@ const Search = ({value, onChange, children}) =>
 // }
 
 
-/**
- * refactored Table component to a stateless functional component
- */
-
-const Table = ({ list, pattern, onDismiss }) =>
-        <div>
-            { list.filter(isSearched(pattern)).map(item =>
-                <div key={item.objectID}>
-                    <span>
-                        <a href={item.url}>{item.title}</a>
-                    </span>
-                    <span>{item.author}</span>
-                    <span>{item.num_comments}</span>
-                    <span>{item.points}</span>
-                    <span>
-                        <Button onClick={() => onDismiss(item.objectID)}>
-                          Dismiss
-                        </Button>
-                    </span>
-                </div>
-            )}
-        </div>;
 
 
 /**
@@ -217,15 +204,15 @@ const Table = ({ list, pattern, onDismiss }) =>
  * refactored Button component to a stateless functional component
  */
 
-const Button = ({onClick, className, children}) =>
-
-{
-    
-        onClick,
-        className = '',
-        children,
-      this.props;
-};
+// const Button = ({onClick, className, children}) =>
+//
+// {
+//
+//         onClick,
+//         className = '',
+//         children,
+//       this.props;
+// };
 
 
     // can remove the return statement since an implicit return is attached
