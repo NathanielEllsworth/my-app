@@ -1,24 +1,12 @@
 import React, {Component} from 'react';
 import './App.css';
 
-const list = [
-    {
-        title: 'React',
-        url: 'https://facebook.github.io/react/',
-        author: 'Jordan Walke',
-        num_comments: 3,
-        points: 4,
-        objectID: 0,
-    },
-    {
-        title: 'Redux',
-        url: 'https://github.com/reactjs/redux',
-        author: 'Dan Abramov, Andrew Clark',
-        num_comments: 2,
-        points: 5,
-        pojectID: 1,
-    },
-];
+const DEFAULT_QUERY = 'redux';
+
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
+
 
 function isSearched(searchTerm){
     return function(item){
@@ -35,19 +23,41 @@ class App extends Component {
         super(props);
 
         this.state = {
-             list: list,
-             searchTerm:'',
+             result: null,
+             searchTerm: DEFAULT_QUERY,
         };
 
+
+        this.setSearchTopStories = this.setSearchTopStories.bind(this);
+        this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
 
+    }
+
+    setSearchTopStories(result) {
+        this.setState({ result });
+    }
+
+    fetchSearchTopStories(searchTerm){
+        fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+            .then(response => response.json())
+            .then(result => this.setSearchTopStories(result))
+            .catch(e => e);
+    }
+
+    componentDidMount(){
+        const { searchTerm } = this.state;
+        this.fetchSearchTopStories(searchTerm);
+        //console.log(this.state);
     }
 
     onSearchChange(event) {
         this.setState({ searchTerm: event.target.value});
 
     }
+
+
 
     onDismiss(id){
 
@@ -57,15 +67,16 @@ class App extends Component {
 
         //*const isNotId = item => item.objectID !== id;
 
-        //*const updatedList = this.state.list.filter(isNotId);
+        //*const updatedResult = this.state.result.filter(isNotId);
 
-        const updatedList = this.state.list.filter(item => item.objectID !== id);
-        this.setState({ list: updatedList });
+        const updatedResult = this.state.result.filter(item => item.objectID !== id);
+        this.setState({ result: updatedResult });
 
     }
 
     render() {
-        const {searchTerm, list} = this.state;
+        const {searchTerm, result} = this.state;
+        if (!result){return null;}
         return (
             <div className="page">
                 <div className="interactions">
@@ -79,7 +90,7 @@ class App extends Component {
                 </div>
 
                 <Table
-                    list={list}
+                    result={result.hits}
                     pattern={searchTerm}
                     onDismiss={this.onDismiss}
                 />
@@ -93,9 +104,9 @@ class App extends Component {
  * refactored Table component to a stateless functional component
  */
 
-const Table = ({ list, pattern, onDismiss }) =>
+const Table = ({ result, pattern, onDismiss }) =>
     <div className="table">
-        { list.filter(isSearched(pattern)).map(item =>
+        { result.filter(isSearched(pattern)).map(item =>
             <div key={item.objectID} className="table-row">
                 <span style={{ width: '40%' }}>
                     <a href={item.url}>{item.title}</a>
@@ -157,12 +168,14 @@ const Search = ({value, onChange, children}) =>
 
 
 
+
+
 // class Table extends Component {
 //     render() {
-//         const { list, pattern, onDismiss } = this.props;
+//         const { result, pattern, onDismiss } = this.props;
 //         return (
 //             <div>
-//                 { list.filter(isSearched(pattern)).map(item =>
+//                 { result.filter(isSearched(pattern)).map(item =>
 //                 <div key={item.objectID}>
 //                     <span>
 //                         <a href={item.url}>{item.title}</a>
@@ -181,9 +194,6 @@ const Search = ({value, onChange, children}) =>
 //         );
 //     }
 // }
-
-
-
 
 /**
  * Now whenever there is no 'className' property the value will be an empty string.
@@ -213,7 +223,6 @@ const Search = ({value, onChange, children}) =>
 //         children,
 //       this.props;
 // };
-
 
     // can remove the return statement since an implicit return is attached
 
