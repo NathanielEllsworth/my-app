@@ -118,27 +118,69 @@ class App extends Component {
     }
 }
 
-class Search extends Component {
-    render() {
-        const { value, onChange, children } = this.props;
-        return (
-            <form>
-                {children} <input
-                    type="text"
-                    value={value}
-                    onChange={onChange}
-                />
-            </form>
-        );
-    }
-}
+// class Search extends Component {
+//     render() {
+//         const { value, onChange, children } = this.props;
+//         return (
+//             <form>
+//                 {children} <input
+//                     type="text"
+//                     value={value}
+//                     onChange={onChange}
+//                 />
+//             </form>
+//         );
+//     }
+// }
 
-class Table extends Component {
-    render() {
-        const { list, pattern, onDismiss } = this.props;
-        return (
-            <div>
-                { list.filter(isSearched(pattern)).map(item =>
+/**
+ * refactored Search component to a stateless functional component
+ */
+
+const Search = ({value, onChange, children}) =>
+    <form>
+        {children} <input
+            type="text"
+            value={value}
+            onChange={onChange}
+        />
+    </form>;
+
+
+
+// class Table extends Component {
+//     render() {
+//         const { list, pattern, onDismiss } = this.props;
+//         return (
+//             <div>
+//                 { list.filter(isSearched(pattern)).map(item =>
+//                 <div key={item.objectID}>
+//                     <span>
+//                         <a href={item.url}>{item.title}</a>
+//                     </span>
+//                     <span>{item.author}</span>
+//                     <span>{item.num_comments}</span>
+//                     <span>{item.points}</span>
+//                     <span>
+//                         <Button onClick={() => onDismiss(item.objectID)}>
+//                           Dismiss
+//                         </Button>
+//                     </span>
+//                 </div>
+//                 )}
+//             </div>
+//         );
+//     }
+// }
+
+
+/**
+ * refactored Table component to a stateless functional component
+ */
+
+const Table = ({ list, pattern, onDismiss }) =>
+        <div>
+            { list.filter(isSearched(pattern)).map(item =>
                 <div key={item.objectID}>
                     <span>
                         <a href={item.url}>{item.title}</a>
@@ -152,25 +194,46 @@ class Table extends Component {
                         </Button>
                     </span>
                 </div>
-                )}
-            </div>
-        );
-    }
-}
+            )}
+        </div>;
+
 
 /**
  * Now whenever there is no 'className' property the value will be an empty string.
  */
 
-class Button extends Component {
-    render() {
-        const {
-            onClick,
-            className = '',
-            children,
-        } = this.props;
-    }
-}
+// class Button extends Component {
+//     render() {
+//         const {
+//             onClick,
+//             className = '',
+//             children,
+//         } = this.props;
+//     }
+// }
+
+
+/**
+ * refactored Button component to a stateless functional component
+ */
+
+const Button = ({onClick, className, children}) =>
+
+{
+    
+        onClick,
+        className = '',
+        children,
+      this.props;
+};
+
+
+    // can remove the return statement since an implicit return is attached
+
+    // return (
+    //     this.props
+    // );
+
 
 export default App;
 
