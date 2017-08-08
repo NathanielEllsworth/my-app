@@ -8,14 +8,17 @@ const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
 
 
-function isSearched(searchTerm){
-    return function(item){
-
-        //some condition that returns true or false pg41
-        return !searchTerm ||
-            item.title.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-}
+/**
+ * legacy client-side search function
+ */
+// function isSearched(searchTerm){
+//     return function(item){
+//
+//         //some condition that returns true or false pg41
+//         return !searchTerm ||
+//             item.title.toLowerCase().includes(searchTerm.toLowerCase());
+//     }
+// }
 
 class App extends Component {
 
@@ -31,8 +34,15 @@ class App extends Component {
         this.setSearchTopStories = this.setSearchTopStories.bind(this);
         this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
+        this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
 
+    }
+
+    onSearchSubmit(event) {
+        const { searchTerm } = this.state;
+        this.fetchSearchTopStories(searchTerm);
+        event.preventDefault();
     }
 
     setSearchTopStories(result) {
@@ -85,6 +95,7 @@ class App extends Component {
                 <Search
                     value={searchTerm}
                     onChange={this.onSearchChange}
+                    onSubmit={this.onSearchSubmit}
                 >
                     Search
                 </Search>
@@ -92,7 +103,6 @@ class App extends Component {
                 { result &&
                      <Table
                         result={result.hits}
-                        pattern={searchTerm}
                         onDismiss={this.onDismiss}
                     />
                 }
@@ -105,9 +115,9 @@ class App extends Component {
  * refactored Table component to a stateless functional component
  */
 
-const Table = ({ result, pattern, onDismiss }) =>
+const Table = ({ result, onDismiss }) =>
     <div className="table">
-        { result.filter(isSearched(pattern)).map(item =>
+        { result.map(item =>
             <div key={item.objectID} className="table-row">
                 <span style={{ width: '40%' }}>
                     <a href={item.url}>{item.title}</a>
@@ -158,14 +168,24 @@ const Table = ({ result, pattern, onDismiss }) =>
  * refactored Search component to a stateless functional component
  */
 
-const Search = ({value, onChange, children}) =>
-    <form>
-        {children} <input
+const Search = ({
+    value,
+    onChange,
+    onSubmit,
+    children
+}) =>
+    <form onSubmit={onSubmit}>
+        <input
             type="text"
             value={value}
             onChange={onChange}
         />
+        <button type="submit">
+            {children}
+        </button>
     </form>;
+
+
 
 
 
