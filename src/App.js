@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
+import PropTypes from 'prop-types';
+
+//import React, {Component, PropTypes} from 'react';
 
 const DEFAULT_QUERY = 'redux';
 const DEFAULT_PAGE = 0;
@@ -203,16 +206,29 @@ const Table = ({ list, onDismiss }) =>
                     {item.points}
                 </span>
                 <span style={{ width: '10%'}}>
-                    <button
+                    <Button
                         onClick={() => onDismiss(item.objectID)}
                         className="button-inline"
                     >
                         Dismiss
-                    </button>
+                    </Button>
                 </span>
             </div>
         )}
-    </div>;
+    </div>
+
+Table.propTypes = {
+    list: PropTypes.arrayOf(
+        PropTypes.shape({
+            objectID: PropTypes.string.isRequired,
+            author: PropTypes.string,
+            url: PropTypes.string,
+            num_comments: PropTypes.number,
+            points: PropTypes.number,
+        })
+    ).isRequired,
+    onDismiss: PropTypes.func.isRequired,
+};
 
 
 
@@ -257,6 +273,33 @@ const Search = ({
     </form>;
 
 
+/**
+ * refactored Button component to a stateless functional component
+ */
+
+const Button = ({
+    onClick,
+    className,
+    children
+}) =>
+    <button
+        onClick={onClick}
+        className={className}
+        type="button"
+    >
+        {children}
+    </button>;
+
+
+Button.defaultProps = {
+    className: '',
+};
+
+Button.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    className: PropTypes.string,
+    children: PropTypes.node.isRequired,
+};
 
 
 
@@ -302,19 +345,7 @@ const Search = ({
 // }
 
 
-/**
- * refactored Button component to a stateless functional component
- */
 
-// const Button = ({onClick, className, children}) =>
-//
-// {
-//
-//         onClick,
-//         className = '',
-//         children,
-//       this.props;
-// };
 
     // can remove the return statement since an implicit return is attached
 
@@ -324,5 +355,11 @@ const Search = ({
 
 
 export default App;
+
+export {
+    Button,
+    Search,
+    Table,
+};
 
 
