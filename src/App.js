@@ -69,8 +69,10 @@ class App extends Component {
 
         //*const updatedResult = this.state.result.filter(isNotId);
 
-        const updatedResult = this.state.result.filter(item => item.objectID !== id);
-        this.setState({ result: updatedResult });
+        const updatedResult = this.state.result.hits.filter(item => item.objectID !== id);
+        this.setState({
+            result: { ...this.state.result, hits: updatedResult }
+        });
 
     }
 
