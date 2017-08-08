@@ -253,6 +253,8 @@ Table.propTypes = {
 
 /**
  * refactored Search component to a stateless functional component
+ *
+ * accessing the DOM! (media playback, animations, etc) **pg 119**
  */
 
 const Search = ({
@@ -260,17 +262,55 @@ const Search = ({
     onChange,
     onSubmit,
     children
-}) =>
-    <form onSubmit={onSubmit}>
-        <input
-            type="text"
-            value={value}
-            onChange={onChange}
-        />
-        <button type="submit">
-            {children}
-        </button>
-    </form>;
+}) => {
+    let input; //here**
+    return (
+        <form onSubmit={onSubmit}>
+            <input
+                type="text"
+                value={value}
+                onChange={onChange}
+                ref={(node) => input = node} //here**
+            />
+            <button type="submit">
+                {children}
+            </button>
+        </form>
+    );
+};
+
+
+
+// class Search extends Component {
+//
+//     componentDidMount() {
+//         this.input.focus();
+//     }
+//
+//     render() {
+//         const {
+//             value,
+//             onChange,
+//             onSubmit,
+//             children
+//         } = this.props; // 'this' object helps to reference the DOM node with the 'ref' attribute
+//
+//         return (
+//             <form onSubmit={onSubmit}>
+//                 <input
+//                     type="text"
+//                     value={value}
+//                     onChange={onChange}
+//                     ref={(node) => { this.input = node;}}
+//                 />
+//                 <button type="submit">
+//                     {children}
+//                 </button>
+//             </form>
+//         );
+//     }
+// }
+
 
 
 /**
