@@ -36,6 +36,7 @@ class App extends Component {
              results: null,
              searchKey: '',
              searchTerm: DEFAULT_QUERY,
+             isLoading: false,
         };
 
 
@@ -73,11 +74,14 @@ class App extends Component {
             results: {
                 ...results,
                 [searchKey]: {hits: updatedResult, page}
-            }
+            },
+            isLoading: false
         });
     }
 
     fetchSearchTopStories(searchTerm, page){
+        this.setState({ isLoading: true });
+
         fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
             .then(response => response.json())
             .then(result => this.setSearchTopStories(result))
@@ -142,7 +146,8 @@ class App extends Component {
         const {
             searchTerm,
             results,
-            searchKey
+            searchKey,
+            isLoading
         } = this.state;
 
         const page = (
@@ -176,9 +181,13 @@ class App extends Component {
                 />
 
                 <div className="interactions">
-                    <button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
-                        More
-                    </button>
+                    {isLoading
+                        ? <Loading />
+                        : <Button
+                            onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
+                            More
+                        </Button>
+                    }
                 </div>
             </div>
         );
@@ -342,7 +351,8 @@ Button.propTypes = {
 };
 
 
-
+const Loading = () =>
+    <div>Loading ...</div>
 
 
 // class Table extends Component {
