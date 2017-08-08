@@ -181,18 +181,18 @@ class App extends Component {
                 />
 
                 <div className="interactions">
-                    {isLoading
-                        ? <Loading />
-                        : <Button
+                    <ButtonWithLoading
+                     isLoading={isLoading}
                             onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>
                             More
-                        </Button>
-                    }
+                    </ButtonWithLoading>
                 </div>
             </div>
         );
     }
 }
+
+// npm run test
 
 /**
  * refactored Table component to a stateless functional component
@@ -402,6 +402,34 @@ const Loading = () =>
     // return (
     //     this.props
     // );
+
+
+/**
+ * Higher Order Components
+ */
+
+const withLoading = (Component) => ({ isLoading, ...rest}) =>
+    isLoading ? <Loading /> : <Component { ...rest } />;
+
+const ButtonWithLoading = withLoading(Button);
+
+
+/**
+ * CS5 HOC
+ */
+// function withFoo(Component) {
+//     return function(props) {
+//         return <Component { ...props } />;
+//     }
+// }
+
+
+
+
+
+
+
+
 
 
 export default App;

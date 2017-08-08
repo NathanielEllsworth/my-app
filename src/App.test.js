@@ -6,16 +6,13 @@ import App, { Search, Button, Table } from "./App";
 
 
 describe('App', () => {
-
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-});
-
+    it('renders', () => {
+        const div = document.createElement('div');
+        ReactDOM.render(<App />, div);
+    });
     test('snapshots', () => {
         const component = renderer.create(
-            <App />
-        );
+            <App /> );
         let tree = component.toJSON();
         expect(tree).toMatchSnapshot();
     });
@@ -24,12 +21,10 @@ it('renders without crashing', () => {
 
 
 describe('Search', () => {
-
     it('renders', () => {
         const div = document.createElement('div');
         ReactDOM.render(<Search>Search</Search>, div);
     });
-
     test('snapshots', () => {
         const component = renderer.create(
             <Search>Search</Search>
@@ -40,14 +35,11 @@ describe('Search', () => {
 });
 
 
-
 describe('Button', () => {
-
     it('renders', () => {
         const div = document.createElement('div');
         ReactDOM.render(<Button>Give Me More</Button>, div);
     });
-
     test('snapshots', () => {
         const component = renderer.create(
             <Button>Give Me More</Button>
@@ -59,7 +51,6 @@ describe('Button', () => {
 
 
 
-
 describe('Table', () => {
     const props = {
         list: [
@@ -67,6 +58,18 @@ describe('Table', () => {
             { title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z' },
         ],
     };
+
+    it('renders', () => {
+        const div = document.createElement('div');
+        ReactDOM.render(<Table { ...props } />, div);
+    });
+    test('snapshots', () => {
+        const component = renderer.create(
+            <Table { ...props } />
+        );
+        let tree = component.toJSON();
+        expect(tree).toMatchSnapshot();
+    });
 
     it('shows two items in list', () => {
         const element = shallow(
