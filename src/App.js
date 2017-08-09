@@ -39,6 +39,29 @@ const SORTS = {
     POINTS: list => sortBy(list, 'points').reverse(), // to see the items with the highest points
 };
 
+const updateSearchTopStoriesState = (hits, page) => (prevState) => {
+    const { searchKey, results } = prevState;
+
+    const oldHits = results && results[searchKey]
+      ? results[searchKey].hits
+      : [];
+
+    const updatedResult = [
+        ...oldHits,
+        ...hits
+    ];
+
+    return {
+        results: {
+            ...results,
+            [searchKey]: { hits: updatedResult, page }
+        },
+        isLoading: false
+    };
+};
+
+
+
 
 
 class App extends Component {
@@ -71,27 +94,9 @@ class App extends Component {
 
     setSearchTopStories(result) {
         // first get hits and page from result
-        const { hits, page } = result;
-        // second check if there are already old hits
-        const { searchKey, results } = this.state;
+        const {hits, page} = result;
 
-        const oldHits = results && results[searchKey]
-            ? results[searchKey].hits
-            :[];
-        // third don't overwrite old hits
-        const updatedResult = [
-            ...oldHits,
-            ...hits
-        ];
-        // fourth set merged hits/page in the internal component state
-        // the bottom part makes sure to store the updated result by searchKey in the results map (line 228)
-        this.setState({
-            results: {
-                ...results,
-                [searchKey]: {hits: updatedResult, page}
-            },
-            isLoading: false
-        });
+        this.setState(updateSearchTopStoriesState(hits, page));
     }
 
     fetchSearchTopStories(searchTerm, page){
